@@ -1,0 +1,118 @@
+docker run --rm -dti [鏡像name]
+
+docker ps
+
+ps(Linux查看進程)
+
+
+容器創建之後，會存儲在宿主機上:
+   linux: /var/lib/docker/containers/
+
+容器生命周期
+
+docker create
+
+docker run
+
+docker start ： 啟動一個已經存在但尚未啟動的容器
+               -a / --attach	啟動的同時，把容器的「輸出（stdout/stderr）」連接到終端機
+
+
+docker restart
+
+
+docker pause
+
+docker unpause
+
+docker stop : 給出退出時間/  docker kill ： 直接退出
+
+docker rm (created exited狀態)
+
+docker rm -f (running 和 paused狀態下)
+
+
+service docker stop  會導致所有的容器異常關閉
+
+docker pull ubuntu : 僅僅是 把 Ubuntu 映像從 Docker Hub 下載下來
+
+                     存在於你本地的映像快取中（可用 docker images 查看）
+
+                     沒有創建容器，也沒執行任何東西
+
+docker create --name mycontainer ubuntu : 建立一個名為 mycontainer 的容器
+
+                      如果你沒先 pull，Docker 會自動幫你 pull
+
+                       但容器建立後 不會啟動
+
+
+容器生命周期和管理
+ 1. docker create [OPTIONS] IMAGE [COMMAND] [ARG...]
+
+    docker create --name  my-nginx(指定鏡像名稱) nginx
+
+   IMAGE：要使用的映像（例如 nginx, ubuntu）
+
+    COMMAND：容器啟動後要執行的主命令（可選）
+
+   在 docker create 或 docker run 命令中，COMMAND 是指：容器啟動時要執行的程式或指令，也就是 Dockerfile 中的 CMD 或 ENTRYPOINT 的覆寫版本。
+
+
+    [ARG...]：傳給該命令的參數（可選）
+
+    docker create ubuntu echo "Hello, Docker!"
+
+    這表示容器啟動後執行： echo "Hello, Docker!"
+
+    -t: --tty: 分配一個TTY, 分配一個虛擬終端(如果你想要直接操作，一定需要)
+
+    -i， --interactive     即使沒有鏈接，也保持STDIN打開 (這個參數就是讓容器可以接受你輸入的指令)
+
+ docker run -ti centos python ： 啓動一個centos容器，并且運行該容器中的python. 通過-ti 可以直接在提供的python終端中輸入指令!!!!!!!!!!!!
+
+
+2. docker run == docker create  + docker start -a
+
+ docker run -ti centos python ： 啓動一個centos容器，并且運行該容器中的python. 通過-ti 可以直接在提供的python終端中輸入指令!!!!!!!!!!!!
+ -d: 在後臺運行
+ docker run -d == docker create  + docker start
+
+ docker run -dti --rm:  儅容器退出將會自動刪除
+
+3. docker stop & docker kill
+-t 延時關閉 0: 立刻關閉  默認等待10秒
+
+docker kill 立刻關閉
+
+4. docker pause & docker unpause
+
+容器依然是up,但是處於pause暫停狀態
+
+-----------------------------------------------------------------------------------------------------------------------------
+容器信息查看
+
+docker inspect [容器名字] : 容器詳細信息
+
+docker inspect [容器名字] -f "{{json.NetworkSettins.Networks}}"
+
+docker logs [options] 容器名字  查看容器日志信息
+
+如果我們使用 docker run -dti centos ls -a
+在使用docker logs 查看，將會看到ls -a命令的輸出結果
+docker logs -f   阻塞一直持續打印 就像tail -f
+------------------------------------------------------------------------------------------------------------------------------
+容器運行時操作(在容器中執行運行命令！！！！！！！) 非常重要
+
+docker exec
+
+
+
+docker attach : 將當前的標準輸入、輸出和錯誤流都綁定在一個啓動容器主進程當中,進入到容器的終端
+
+例如運行 一個容器并且啓動python
+如果docker attach  這個容器，將會直接進入該容器的python終端
+
+
+
+

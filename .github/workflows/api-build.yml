@@ -1,0 +1,37 @@
+name: api-build
+
+on:
+  push:
+    paths:
+      - ".github/workflows/api-build.yml"
+      - "pom.xml"
+      - "src/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build-demo-api
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17 (Temurin) + Maven cache
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Maven clean verify
+        run: mvn -B -ntp clean verify
+        # 如果你暂时不跑测试，可用：mvn -B -ntp -DskipTests clean package
+
+      - name: Upload build artifact (JAR)
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-jar
+          path: |
+            target/*.jar
+            !target/*-sources.jar
+            !target/*-javadoc.jar
