@@ -1,13 +1,10 @@
+server:
+  port:8083
+
 spring:
   application:
       name:demo
-  server:
-      port:8083
-  flyway:
-    enabled: true
-    baseline-on-migrate: true #是否開啓牽引
-    locations: classpath:db/migration
-    clean-disabled: true
+
   datasource:
     url: jdbc:postgresql://localhost:5432/nitereGitAction
     username: postgres
@@ -29,5 +26,5 @@ spring:
      show-sql: true
      properties:
         hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+          format_sql: true
